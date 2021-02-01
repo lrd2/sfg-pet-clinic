@@ -1276,6 +1276,12 @@
                             "$ref": "#/definitions/FilterPageRequest"
                         }
                     }, {
+                        "name": "supportedEventLog",
+                        "in": "query",
+                        "description": "supportedEventLog",
+                        "required": false,
+                        "type": "string"
+                    }, {
                         "name": "supportedProfile",
                         "in": "query",
                         "description": "supportedProfile",
