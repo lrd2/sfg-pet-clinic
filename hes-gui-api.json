@@ -1007,6 +1007,92 @@
                 "deprecated": false
             }
         },
+        "/event-logs/elements/{eventLogName}": {
+            "get": {
+                "tags": ["event-logs-controller"],
+                "summary": "getEventLogElements",
+                "operationId": "getEventLogElementsUsingGET",
+                "produces": ["*/*"],
+                "parameters": [{
+                        "name": "eventLogName",
+                        "in": "path",
+                        "description": "eventLogName",
+                        "required": true,
+                        "type": "string"
+                    }, {
+                        "name": "meterTypeKey",
+                        "in": "query",
+                        "description": "meterTypeKey",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/RegisterAttributeDTO"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/event-logs/labels-identifiers/{eventLogName}": {
+            "get": {
+                "tags": ["event-logs-controller"],
+                "summary": "getRegisterAttributeLabelsAndIdentifiers",
+                "operationId": "getRegisterAttributeLabelsAndIdentifiersUsingGET",
+                "produces": ["*/*"],
+                "parameters": [{
+                        "name": "eventLogName",
+                        "in": "path",
+                        "description": "eventLogName",
+                        "required": true,
+                        "type": "string"
+                    }, {
+                        "name": "meterTypeKey",
+                        "in": "query",
+                        "description": "meterTypeKey",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/EventLogElementDto"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "deprecated": false
+            }
+        },
         "/event-logs/meter-type/{meterTypeKey}": {
             "get": {
                 "tags": ["event-logs-controller"],
@@ -2046,7 +2132,7 @@
             "get": {
                 "tags": ["profile-elements-controller"],
                 "summary": "getRegisterAttributeLabelsAndIdentifiers",
-                "operationId": "getRegisterAttributeLabelsAndIdentifiersUsingGET",
+                "operationId": "getRegisterAttributeLabelsAndIdentifiersUsingGET_1",
                 "produces": ["*/*"],
                 "parameters": [{
                         "name": "meterTypeKey",
@@ -2068,7 +2154,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/ProfileElementDTO"
+                                "$ref": "#/definitions/ProfileElementDto"
                             }
                         }
                     },
@@ -2171,7 +2257,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/RegisterDTO"
+                                "$ref": "#/definitions/RegisterDto"
                             }
                         }
                     },
@@ -3426,6 +3512,18 @@
             },
             "title": "EntryReadRequest"
         },
+        "EventLogElementDto": {
+            "type": "object",
+            "properties": {
+                "identifier": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "title": "EventLogElementDto"
+        },
         "ExecutionDetailsDTO": {
             "type": "object",
             "properties": {
@@ -4035,6 +4133,9 @@
                 "attrIndex": {
                     "type": "integer",
                     "format": "int32"
+                },
+                "blank": {
+                    "type": "boolean"
                 },
                 "description": {
                     "type": "string"
@@ -4794,7 +4895,7 @@
             },
             "title": "ProfileDetailsDto"
         },
-        "ProfileElementDTO": {
+        "ProfileElementDto": {
             "type": "object",
             "properties": {
                 "identifier": {
@@ -4804,7 +4905,7 @@
                     "type": "string"
                 }
             },
-            "title": "ProfileElementDTO"
+            "title": "ProfileElementDto"
         },
         "RecurringDetailsDTO": {
             "type": "object",
@@ -4824,7 +4925,26 @@
             },
             "title": "RecurringDetailsDTO"
         },
-        "RegisterDTO": {
+        "RegisterAttributeDTO": {
+            "type": "object",
+            "properties": {
+                "registerAttributeIdentifier": {
+                    "type": "string"
+                },
+                "registerAttributeIndex": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "registerAttributeLabel": {
+                    "type": "string"
+                },
+                "registerAttributeObisCode": {
+                    "type": "string"
+                }
+            },
+            "title": "RegisterAttributeDTO"
+        },
+        "RegisterDto": {
             "type": "object",
             "properties": {
                 "identifier": {
@@ -4834,7 +4954,7 @@
                     "type": "string"
                 }
             },
-            "title": "RegisterDTO"
+            "title": "RegisterDto"
         },
         "ReportOperationResult": {
             "type": "object",
