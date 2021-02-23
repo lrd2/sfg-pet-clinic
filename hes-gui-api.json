@@ -34,6 +34,9 @@
             "name": "integration-dashboard-controller",
             "description": "Integration Dashboard Controller"
         }, {
+            "name": "media-controller",
+            "description": "Media Controller"
+        }, {
             "name": "meter-alarm-controller",
             "description": "Meter Alarm Controller"
         }, {
@@ -71,7 +74,7 @@
             "description": "Scheduled Report Executions Controller"
         }, {
             "name": "sim-controller",
-            "description": "SIM Controller"
+            "description": "Sim Controller"
         }, {
             "name": "special-days-controller",
             "description": "Special Days Controller"
@@ -486,7 +489,7 @@
                 "tags": ["schedule-dashboard-controller"],
                 "summary": "Returns schedule executions summary in form of paged entries.",
                 "description": "Accepts two parameters (startDateTime and endDateTime), from which the former is required. In case that the latter is not provided, API will return all planned schedule executions summaries, limited by default configurable parameters.",
-                "operationId": "getSchedulesDashboardUsingPOST_1",
+                "operationId": "getSchedulesDashboardUsingPOST_2",
                 "consumes": ["application/json"],
                 "produces": ["*/*"],
                 "parameters": [{
@@ -1550,20 +1553,20 @@
                 "deprecated": false
             }
         },
-        "/meter": {
+        "/media": {
             "post": {
-                "tags": ["meter-controller"],
-                "summary": "addMeter",
-                "operationId": "addMeterUsingPOST",
+                "tags": ["media-controller"],
+                "summary": "Returns media details in form of paged objects.",
+                "operationId": "getSchedulesDashboardUsingPOST_1",
                 "consumes": ["application/json"],
                 "produces": ["*/*"],
                 "parameters": [{
                         "in": "body",
-                        "name": "meterConfigurationDTO",
-                        "description": "meterConfigurationDTO",
-                        "required": true,
+                        "name": "filterPageRequest",
+                        "description": "Represents filters used in HES.",
+                        "required": false,
                         "schema": {
-                            "$ref": "#/definitions/MeterConfigurationDTO"
+                            "$ref": "#/definitions/FilterPageRequest"
                         }
                     }
                 ],
@@ -1571,7 +1574,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/BaseResponse"
+                            "$ref": "#/definitions/Page«MediaDto»"
                         }
                     },
                     "201": {
@@ -1588,7 +1591,9 @@
                     }
                 },
                 "deprecated": false
-            },
+            }
+        },
+        "/meter": {
             "put": {
                 "tags": ["meter-controller"],
                 "summary": "updateMeterConfiguration",
@@ -2756,7 +2761,7 @@
         "/sim/{simSerialNumber}": {
             "get": {
                 "tags": ["sim-controller"],
-                "summary": "Returns SIM details based on SIM serial number",
+                "summary": "Returns media details based on SIM serial number",
                 "operationId": "getSimDTOUsingGET",
                 "produces": ["*/*"],
                 "parameters": [{
@@ -2772,7 +2777,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/SimCardDTO"
+                            "$ref": "#/definitions/MediaDto"
                         }
                     },
                     "401": {
@@ -3351,18 +3356,6 @@
             },
             "title": "AuthenticationParamsDTO"
         },
-        "BaseResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                }
-            },
-            "title": "BaseResponse"
-        },
         "CboIntegration": {
             "type": "object",
             "properties": {
@@ -3901,6 +3894,29 @@
             },
             "title": "LocalTime"
         },
+        "MediaDto": {
+            "type": "object",
+            "properties": {
+                "ipAddress": {
+                    "type": "string"
+                },
+                "msisdn": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "operator": {
+                    "type": "string"
+                },
+                "portNumber": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "simSerialNumber": {
+                    "type": "string"
+                }
+            },
+            "title": "MediaDto"
+        },
         "MeterAlarmDto": {
             "type": "object",
             "properties": {
@@ -3925,36 +3941,6 @@
                 }
             },
             "title": "MeterAlarmDto"
-        },
-        "MeterConfigurationDTO": {
-            "type": "object",
-            "properties": {
-                "dlmsServerAdress": {
-                    "type": "string"
-                },
-                "interfaceType": {
-                    "type": "string"
-                },
-                "ipAddress": {
-                    "type": "string"
-                },
-                "logicalServerAddress": {
-                    "type": "string"
-                },
-                "meterTypeKey": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "portNumber": {
-                    "type": "string"
-                },
-                "serialNumber": {
-                    "type": "string"
-                }
-            },
-            "title": "MeterConfigurationDTO"
         },
         "MeterDetails": {
             "type": "object",
@@ -4086,6 +4072,9 @@
                     "type": "string",
                     "enum": ["HDLC", "WRAPPER"]
                 },
+                "ip": {
+                    "type": "string"
+                },
                 "logicalServerAddress": {
                     "type": "integer",
                     "format": "int32"
@@ -4097,6 +4086,9 @@
                     "type": "string",
                     "enum": ["LG_E570", "MCS_301", "DUMMY", "SMA", "GAMAG3G", "AD13A"]
                 },
+                "mobileOperator": {
+                    "type": "string"
+                },
                 "model": {
                     "type": "string"
                 },
@@ -4107,6 +4099,10 @@
                 "name": {
                     "type": "string"
                 },
+                "port": {
+                    "type": "integer",
+                    "format": "int32"
+                },
                 "ppeDTO": {
                     "$ref": "#/definitions/PpeDTO"
                 },
@@ -4116,9 +4112,6 @@
                 "serverAddress": {
                     "type": "integer",
                     "format": "int32"
-                },
-                "simCardDTO": {
-                    "$ref": "#/definitions/SimCardDTO"
                 },
                 "unmountedDate": {
                     "type": "string",
@@ -4540,6 +4533,53 @@
                 }
             },
             "title": "Page«FileImport»"
+        },
+        "Page«MediaDto»": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/MediaDto"
+                    }
+                },
+                "empty": {
+                    "type": "boolean"
+                },
+                "first": {
+                    "type": "boolean"
+                },
+                "last": {
+                    "type": "boolean"
+                },
+                "number": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "numberOfElements": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "pageable": {
+                    "$ref": "#/definitions/Pageable"
+                },
+                "size": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "sort": {
+                    "$ref": "#/definitions/Sort"
+                },
+                "totalElements": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "totalPages": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "title": "Page«MediaDto»"
         },
         "Page«MeterAlarmDto»": {
             "type": "object",
@@ -5108,6 +5148,9 @@
         "SapMeterDTO": {
             "type": "object",
             "properties": {
+                "mediaDto": {
+                    "$ref": "#/definitions/MediaDto"
+                },
                 "meterTypeKey": {
                     "type": "string"
                 },
@@ -5124,9 +5167,6 @@
                 },
                 "serialNumber": {
                     "type": "string"
-                },
-                "simCardDTO": {
-                    "$ref": "#/definitions/SimCardDTO"
                 },
                 "unmountDate": {
                     "type": "string",
@@ -5304,6 +5344,10 @@
                     "format": "int32"
                 },
                 "numberOfFailedMeterOperations": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "numberOfSuccessfulWithWarningMeterOperations": {
                     "type": "integer",
                     "format": "int32"
                 },
@@ -5518,29 +5562,6 @@
                 }
             },
             "title": "Section"
-        },
-        "SimCardDTO": {
-            "type": "object",
-            "properties": {
-                "ipAddress": {
-                    "type": "string"
-                },
-                "msisdn": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "operator": {
-                    "type": "string"
-                },
-                "portNumber": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "serialNumber": {
-                    "type": "string"
-                }
-            },
-            "title": "SimCardDTO"
         },
         "SimplePageRequest": {
             "type": "object",
