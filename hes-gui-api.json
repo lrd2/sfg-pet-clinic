@@ -489,7 +489,7 @@
                 "tags": ["schedule-dashboard-controller"],
                 "summary": "Returns schedule executions summary in form of paged entries.",
                 "description": "Accepts two parameters (startDateTime and endDateTime), from which the former is required. In case that the latter is not provided, API will return all planned schedule executions summaries, limited by default configurable parameters.",
-                "operationId": "getSchedulesDashboardUsingPOST_2",
+                "operationId": "getSchedulesDashboardUsingPOST_1",
                 "consumes": ["application/json"],
                 "produces": ["*/*"],
                 "parameters": [{
@@ -1557,7 +1557,7 @@
             "post": {
                 "tags": ["media-controller"],
                 "summary": "Returns media details in form of paged objects.",
-                "operationId": "getSchedulesDashboardUsingPOST_1",
+                "operationId": "getMediaUsingPOST",
                 "consumes": ["application/json"],
                 "produces": ["*/*"],
                 "parameters": [{
@@ -1606,7 +1606,7 @@
                         "description": "meterDTO",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/MeterDetailsDTO"
+                            "$ref": "#/definitions/MeterConfiguration"
                         }
                     }
                 ],
@@ -1876,7 +1876,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/MeterDetailsDTO"
+                            "$ref": "#/definitions/MeterConfiguration"
                         }
                     },
                     "401": {
@@ -3356,6 +3356,32 @@
             },
             "title": "AuthenticationParamsDTO"
         },
+        "BasicAttributes": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "cboIncluded": {
+                    "type": "boolean"
+                },
+                "firmware": {
+                    "type": "string"
+                },
+                "model": {
+                    "type": "string"
+                },
+                "mountedDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "unmountedDate": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "title": "BasicAttributes"
+        },
         "CboIntegration": {
             "type": "object",
             "properties": {
@@ -3405,6 +3431,40 @@
                 }
             },
             "title": "CboIntegration"
+        },
+        "Communication": {
+            "type": "object",
+            "properties": {
+                "authentication": {
+                    "type": "string",
+                    "enum": ["DEFAULT", "NONE", "LOW", "HIGH", "HIGH_MD5", "HIGH_SHA1", "HIGH_GMAC", "HIGH_SHA256", "HIGH_ECDSA"]
+                },
+                "clientAddress": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "connectionSecurity": {
+                    "type": "string",
+                    "enum": ["DEFAULT", "NONE", "AUTHENTICATION", "ENCRYPTION", "AUTHENTICATION_ENCRYPTION"]
+                },
+                "interfaceType": {
+                    "type": "string",
+                    "enum": ["HDLC", "WRAPPER"]
+                },
+                "logicalAddress": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "physicalAddress": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "serverAddress": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "title": "Communication"
         },
         "ConfigurableParameterDTO": {
             "type": "object",
@@ -3894,6 +3954,22 @@
             },
             "title": "LocalTime"
         },
+        "MediaConfiguration": {
+            "type": "object",
+            "properties": {
+                "ip": {
+                    "type": "string"
+                },
+                "mobileOperator": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "title": "MediaConfiguration"
+        },
         "MediaDto": {
             "type": "object",
             "properties": {
@@ -3941,6 +4017,37 @@
                 }
             },
             "title": "MeterAlarmDto"
+        },
+        "MeterConfiguration": {
+            "type": "object",
+            "properties": {
+                "authenticationParamsDTO": {
+                    "$ref": "#/definitions/AuthenticationParamsDTO"
+                },
+                "basicAttributes": {
+                    "$ref": "#/definitions/BasicAttributes"
+                },
+                "communication": {
+                    "$ref": "#/definitions/Communication"
+                },
+                "mediaConfiguration": {
+                    "$ref": "#/definitions/MediaConfiguration"
+                },
+                "meterTypeKey": {
+                    "type": "string"
+                },
+                "meterTypeKeyEnum": {
+                    "type": "string",
+                    "enum": ["LG_E570", "MCS_301", "DUMMY", "SMA", "GAMAG3G", "AD13A"]
+                },
+                "ppeDTO": {
+                    "$ref": "#/definitions/PpeDTO"
+                },
+                "serialNumber": {
+                    "type": "string"
+                }
+            },
+            "title": "MeterConfiguration"
         },
         "MeterDetails": {
             "type": "object",
@@ -4036,89 +4143,6 @@
                 }
             },
             "title": "MeterDetails"
-        },
-        "MeterDetailsDTO": {
-            "type": "object",
-            "properties": {
-                "active": {
-                    "type": "boolean"
-                },
-                "authentication": {
-                    "type": "string",
-                    "enum": ["DEFAULT", "NONE", "LOW", "HIGH", "HIGH_MD5", "HIGH_SHA1", "HIGH_GMAC", "HIGH_SHA256", "HIGH_ECDSA"]
-                },
-                "authenticationParamsDTO": {
-                    "$ref": "#/definitions/AuthenticationParamsDTO"
-                },
-                "cboIncluded": {
-                    "type": "boolean"
-                },
-                "clientAddress": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "connectionSecurity": {
-                    "type": "string",
-                    "enum": ["DEFAULT", "NONE", "AUTHENTICATION", "ENCRYPTION", "AUTHENTICATION_ENCRYPTION"]
-                },
-                "dlmsServerAdress": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "firmware": {
-                    "type": "string"
-                },
-                "interfaceType": {
-                    "type": "string",
-                    "enum": ["HDLC", "WRAPPER"]
-                },
-                "ip": {
-                    "type": "string"
-                },
-                "logicalServerAddress": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "meterTypeKey": {
-                    "type": "string"
-                },
-                "meterTypeKeyEnum": {
-                    "type": "string",
-                    "enum": ["LG_E570", "MCS_301", "DUMMY", "SMA", "GAMAG3G", "AD13A"]
-                },
-                "mobileOperator": {
-                    "type": "string"
-                },
-                "model": {
-                    "type": "string"
-                },
-                "mountedDate": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "port": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "ppeDTO": {
-                    "$ref": "#/definitions/PpeDTO"
-                },
-                "serialNumber": {
-                    "type": "string"
-                },
-                "serverAddress": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "unmountedDate": {
-                    "type": "string",
-                    "format": "date-time"
-                }
-            },
-            "title": "MeterDetailsDTO"
         },
         "MeterReadEntryDto": {
             "type": "object",
